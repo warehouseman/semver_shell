@@ -2,15 +2,17 @@
 #
 
 function semverParseInto() {
+    val=$1;
+    if [[ "X${val}X" == "XX" ]]; then val="0.0.0"; fi;
     local RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)[-]\{0,1\}\([0-9A-Za-z.-]*\)'
     #MAJOR
-    eval $2=`echo $1 | sed -e "s#$RE#\1#"`
+    eval $2=`echo ${val} | sed -e "s#$RE#\1#"`
     #MINOR
-    eval $3=`echo $1 | sed -e "s#$RE#\2#"`
+    eval $3=`echo ${val} | sed -e "s#$RE#\2#"`
     #MINOR
-    eval $4=`echo $1 | sed -e "s#$RE#\3#"`
+    eval $4=`echo ${val} | sed -e "s#$RE#\3#"`
     #SPECIAL
-    eval $5=`echo $1 | sed -e "s#$RE#\4#"`
+    eval $5=`echo ${val} | sed -e "s#$RE#\4#"`
 }
 
 function semverConstruct() {
@@ -32,8 +34,8 @@ function semverCmp() {
     local PATCH_B=0
     local SPECIAL_B=0
 
-    semverParseInto $1 MAJOR_A MINOR_A PATCH_A SPECIAL_A
-    semverParseInto $2 MAJOR_B MINOR_B PATCH_B SPECIAL_B
+    semverParseInto "$1" MAJOR_A MINOR_A PATCH_A SPECIAL_A
+    semverParseInto "$2" MAJOR_B MINOR_B PATCH_B SPECIAL_B
 
     # major
     if [ $MAJOR_A -lt $MAJOR_B ]; then
