@@ -1,4 +1,4 @@
-semver_bash is a bash parser for semantic versioning
+.semver_bash is a bash parser for semantic versioning
 ====================================================
 
 [Semantic Versioning](http://semver.org/) is a set of guidelines that help keep
