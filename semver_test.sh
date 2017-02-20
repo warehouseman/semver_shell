@@ -46,6 +46,12 @@ doTest "semverParseInto $E -> M m p s" "M:1 m:3 p:2 s:a" "M:$MAJOR m:$MINOR p:$P
 semverParseInto $H MAJOR MINOR PATCH SPECIAL
 doTest "semverParseInto $H -> M m p s" "M:1 m:2 p:3 s:a" "M:$MAJOR m:$MINOR p:$PATCH s:$SPECIAL"
 
+semverLE $A $A
+doTest "semverLE $A $A" 0 $?
+
+semverGE $A $A
+doTest "semverGE $A $A" 0 $?
+
 
 echo "Comparisons"
 semverCmp $A $A
@@ -79,6 +85,12 @@ doTest "semverLT $A $B" 0 $?
 semverGT $A $B
 doTest "semverGT $A $B" 1 $?
 
+semverLE $A $B
+doTest "semverLE $A $B" 0 $?
+
+semverGE $A $B
+doTest "semverGE $A $B" 1 $?
+
 semverEQ $B $A
 doTest "semverEQ $B $A" 1 $?
 
@@ -87,6 +99,12 @@ doTest "semverLT $B $A" 1 $?
 
 semverGT $B $A
 doTest "semverGT $B $A" 0 $?
+
+semverLE $B $A
+doTest "semverLE $B $A" 1 $?
+
+semverGE $B $A
+doTest "semverGE $B $A" 0 $?
 
 
 echo "Minor number comparisons"
@@ -99,6 +117,12 @@ doTest "semverLT $A $C" 0 $?
 semverGT $A $C
 doTest "semverGT $A $C" 1 $?
 
+semverLE $A $C
+doTest "semverLE $A $C" 0 $?
+
+semverGE $A $C
+doTest "semverGE $A $C" 1 $?
+
 semverEQ $C $A
 doTest "semverEQ $C $A" 1 $?
 
@@ -108,6 +132,11 @@ doTest "semverLT $C $A" 1 $?
 semverGT $C $A
 doTest "semverGT $C $A" 0 $?
 
+semverLE $C $A
+doTest "semverLE $C $A" 1 $?
+
+semverGE $C $A
+doTest "semverGE $C $A" 0 $?
 
 echo "Patch number comparisons"
 semverEQ $A $D
@@ -118,6 +147,12 @@ doTest "semverLT $A $D" 0 $?
 
 semverGT $A $D
 doTest "semverGT $A $D" 1 $?
+
+semverLE $A $D
+doTest "semverLE $A $D" 0 $?
+
+semverGE $A $D
+doTest "semverGE $A $D" 1 $?
 
 semverEQ $D $A
 doTest "semverEQ $D $A" 1 $?
@@ -139,6 +174,12 @@ doTest "semverLT $A $E" 1 $?
 semverGT $A $E
 doTest "semverGT $A $E" 0 $?
 
+semverLE $A $E
+doTest "semverLE $A $E" 1 $?
+
+semverGE $A $E
+doTest "semverGE $A $E" 0 $?
+
 semverEQ $E $A
 doTest "semverEQ $E $A" 1 $?
 
@@ -159,6 +200,12 @@ doTest "semverLT $E $F" 0 $?
 semverGT $E $F
 doTest "semverLT $E $F" 1 $?
 
+semverLE $E $F
+doTest "semverLE $E $F" 0 $?
+
+semverGE $E $F
+doTest "semverGE $E $F" 1 $?
+
 semverEQ $F $E
 doTest "semverEQ $F $E" 1 $?
 
@@ -167,6 +214,12 @@ doTest "semverLT $F $E" 1 $?
 
 semverGT $F $E
 doTest "semverGT $F $E" 0 $?
+
+semverLE $F $E
+doTest "semverLE $F $E" 1 $?
+
+semverGE $F $E
+doTest "semverGE $F $E" 0 $?
 
 
 echo "Minor and patch number comparisons"
@@ -178,6 +231,12 @@ doTest "semverLT $A $G" 1 $?
 
 semverGT $A $G
 doTest "semverGT $A $G" 0 $?
+
+semverLE $A $G
+doTest "semverLE $A $G" 1 $?
+
+semverGE $A $G
+doTest "semverGE $A $G" 0 $?
 
 semverEQ $G $A
 doTest "semverEQ $G $A" 1 $?
