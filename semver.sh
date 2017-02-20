@@ -122,6 +122,30 @@ function semverGT() {
     return 0
 }
 
+function semverLE() {
+    semverGT $1 $2
+    local RESULT=$?
+
+    if [ $RESULT -ne 1 ]; then
+        # not lesser than or equal
+        return 1
+    fi
+
+    return 0
+}
+
+function semverGE() {
+    semverLT $1 $2
+    local RESULT=$?
+
+    if [ $RESULT -ne 1 ]; then
+        # not greater than or equal
+        return 1
+    fi
+
+    return 0
+}
+
 function semverBumpMajor() {
     local MAJOR=0
     local MINOR=0
@@ -217,6 +241,20 @@ if [ "___semver.sh" == "___`basename $0`" ]; then
 
     if [ "$2" == "gt" ]; then
         semverGT $1 $3
+        RESULT=$?
+        echo $RESULT
+        exit $RESULT
+    fi
+
+    if [ "$2" == "le" ]; then
+        semverLE $1 $3
+        RESULT=$?
+        echo $RESULT
+        exit $RESULT
+    fi
+
+    if [ "$2" == "ge" ]; then
+        semverGE $1 $3
         RESULT=$?
         echo $RESULT
         exit $RESULT
