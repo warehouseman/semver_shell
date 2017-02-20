@@ -2,4 +2,4 @@ dist: trusty
 
 language: bash
 
-script: semver_test.sh
+script: ./semver_test.sh
