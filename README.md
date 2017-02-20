@@ -6,6 +6,8 @@ version and version management sane. This is a bash based parser to help manage
 a project's versions. Use it from a Makefile or any scripts you use in your
 project.
 
+https://travis-ci.org/warehouseman/semver_bash.svg?branch=master
+
 Usage
 -----
 semver_bash can be used from the command line as:  
