@@ -1,21 +1,19 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 . ./semver.sh
 
 status=0
 
-function doTest() {
-    local TEST=$1
-    local EXPECTED=$2
-    local ACTUAL=$3
+doTest() {
+    local TEST="$1"
+    local EXPECTED="$2"
+    local ACTUAL="$3"
 
-    echo -n "$TEST: "
-
-    if [[ "$EXPECTED" == "$ACTUAL" ]]; then
-        echo "passed"
+    if [ "$EXPECTED" = "$ACTUAL" ]; then
+        echo "$TEST: passed"
     else
         status=1
-        echo "FAILED, expected '${EXPECTED}', actual: '${ACTUAL}'"
+        echo "$TEST: FAILED, expected '${EXPECTED}', actual: '${ACTUAL}'"
     fi
 }
 
