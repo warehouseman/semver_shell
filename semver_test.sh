@@ -2,7 +2,13 @@
 
 . ./semver.sh
 
-status=0
+status=0;
+count=0
+total=0;
+
+red='\033[0;31m'
+green='\033[0;32m'
+nc='\033[0m' # No Color
 
 doTest() {
     local TEST="$1"
@@ -10,11 +16,13 @@ doTest() {
     local ACTUAL="$3"
 
     if [ "$EXPECTED" = "$ACTUAL" ]; then
-        echo "$TEST: passed"
+        printf "  [${green}Passed${nc}] -- ${TEST} \n"
     else
         status=1
-        echo "$TEST: FAILED, expected '${EXPECTED}', actual: '${ACTUAL}'"
+        count=$(( count+1 ))
+        printf  "  [${red}FAILED${nc}] -- $TEST: Expected '${EXPECTED}' vs Actual: '${ACTUAL}'\n"
     fi
+    total=$(( total+1 ))
 }
 
 semverTest() {
@@ -279,8 +287,18 @@ doTest "semverStripSpecial $A" "1.3.2" $VERSION
 
 semverStripSpecial $E VERSION
 doTest "semverStripSpecial $E" "1.3.2" $VERSION
+
+semverGT $A $A
+doTest "semverGT $A $A" 0 $?
+
 }
 
 semverTest
 
+[ ${count} -lt 1 ] && col=${green} || col=${red}
+[ ${count} -eq 1 ] && msg="was 1 failure" || msg="were ${count} failures"
+
+printf "\n${col}There %s in %s tests ${nc}\n" "${msg}" "${total}"
+
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 exit $status
