@@ -288,8 +288,9 @@ doTest "semverStripSpecial $A" "1.3.2" $VERSION
 semverStripSpecial $E VERSION
 doTest "semverStripSpecial $E" "1.3.2" $VERSION
 
-semverGT $A $A
-doTest "semverGT $A $A" 0 $?
+# Test that CI fails red
+# semverGT $A $A
+# doTest "semverGT $A $A" 0 $?
 
 }
 
@@ -298,7 +299,7 @@ semverTest
 [ ${count} -lt 1 ] && col=${green} || col=${red}
 [ ${count} -eq 1 ] && msg="was 1 failure" || msg="were ${count} failures"
 
-printf "\n${col}There %s in %s tests ${nc}\n" "${msg}" "${total}"
+printf "\n${col}There %s in %s tests.${nc}\n" "${msg}" "${total}"
 
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 exit $status
