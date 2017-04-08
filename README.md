@@ -6,7 +6,7 @@ version and version management sane. This is a Unix shell script parser to help 
 
 Use it from a Makefile or any scripts you use in your project.
 
-Travis: [![Travis](https://travis-ci.org/warehouseman/semver_bash.svg?branch=master)](https://travis-ci.org/warehouseman/semver_bash)
+Travis: [![Travis](https://travis-ci.org/warehouseman/semver_shell.svg?branch=master)](https://travis-ci.org/warehouseman/semver_shell)
   CircleCI: [![CircleCI](https://circleci.com/gh/warehouseman/semver_shell.svg?style=svg)](https://circleci.com/gh/warehouseman/semver_shell)
 
 Usage
