@@ -3,7 +3,7 @@
 general:
   branches:
     only:
-      - nkvcs
+      - master
 
 test:
   post:
