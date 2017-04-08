@@ -4,15 +4,18 @@ semverParseInto() {
     val="$1";
     if [ "X${val}X" = "XX" ]; then val="0.0.0"; fi;
     # shellcheck disable=SC2039
-    local RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)[-]\{0,1\}\([0-9A-Za-z.-]*\)'
+    # local RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)[-]\{0,1\}\([0-9A-Za-z.-]*\)'
+    local RE="[^0-9]*\([0-9]\+\)\(\.\([0-9]\+\)\|\)\(\.\([0-9]\+\)\|\)[-]\{0,1\}\([0-9A-Za-z.-]*\)"
     #MAJOR
-    eval "$2"="$(echo ${val} | sed -e "s#$RE#\1#")"
+    eval "$2"="$(echo ${val} | sed -n -e "s#$RE#\1#p")"
     #MINOR
-    eval "$3"="$(echo ${val} | sed -e "s#$RE#\2#")"
+    eval "$3"="$(echo ${val} | sed -n -e "s#$RE#\3#p")"
+    eval "$3=\${$3:-0}"
     #MINOR
-    eval "$4"="$(echo ${val} | sed -e "s#$RE#\3#")"
+    eval "$4"="$(echo ${val} | sed -n -e "s#$RE#\5#p")"
+    eval "$4=\${$4:-0}"
     #SPECIAL
-    eval "$5"="$(echo ${val} | sed -e "s#$RE#\4#")"
+    eval "$5"="$(echo ${val} | sed -n -e "s#$RE#\6#p")"
 }
 
 semverConstruct() {

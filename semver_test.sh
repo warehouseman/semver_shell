@@ -34,6 +34,9 @@ local E=R1.3.2a
 local F=R1.3.2b
 local G=R1.2.3
 local H=1.2.3-a
+local I=R2
+local J=R2.0
+local K=R2.0.0
 
 local MAJOR=0
 local MINOR=0
@@ -71,6 +74,12 @@ doTest "semverCmp $A $B" 2 $?
 
 semverCmp $B $A
 doTest "semverCmp $B $A" 1 $?
+
+semverCmp $I $K
+doTest "semverCmp $I $K" 0 $?
+
+semverCmp $I $J
+doTest "semverCmp $I $J" 0 $?
 
 
 echo "Equality comparisons"
