@@ -1,37 +1,45 @@
-#!/usr/bin/env bash
-#
+#!/usr/bin/env sh
 
-function semverParseInto() {
-    val=$1;
-    if [[ "X${val}X" == "XX" ]]; then val="0.0.0"; fi;
+semverParseInto() {
+    val="$1";
+    if [ "X${val}X" = "XX" ]; then val="0.0.0"; fi;
+    # shellcheck disable=SC2039
     local RE='[^0-9]*\([0-9]*\)[.]\([0-9]*\)[.]\([0-9]*\)[-]\{0,1\}\([0-9A-Za-z.-]*\)'
     #MAJOR
-    eval $2=`echo ${val} | sed -e "s#$RE#\1#"`
+    eval "$2"="$(echo ${val} | sed -e "s#$RE#\1#")"
     #MINOR
-    eval $3=`echo ${val} | sed -e "s#$RE#\2#"`
+    eval "$3"="$(echo ${val} | sed -e "s#$RE#\2#")"
     #MINOR
-    eval $4=`echo ${val} | sed -e "s#$RE#\3#"`
+    eval "$4"="$(echo ${val} | sed -e "s#$RE#\3#")"
     #SPECIAL
-    eval $5=`echo ${val} | sed -e "s#$RE#\4#"`
+    eval "$5"="$(echo ${val} | sed -e "s#$RE#\4#")"
 }
 
-function semverConstruct() {
-    if [[ $# -eq 5 ]]; then
-        eval $5=`echo "$1.$2.$3-$4"`
+semverConstruct() {
+    if [ $# -eq 5 ]; then
+        eval "$5=$1.$2.$3-$4"
     fi
 
-    eval $4=`echo "$1.$2.$3"`
+    eval "$4=$1.$2.$3"
 }
 
-function semverCmp() {
+semverCmp() {
+    # shellcheck disable=SC2039
     local MAJOR_A=0
+    # shellcheck disable=SC2039
     local MINOR_A=0
+    # shellcheck disable=SC2039
     local PATCH_A=0
+    # shellcheck disable=SC2039
     local SPECIAL_A=0
 
+    # shellcheck disable=SC2039
     local MAJOR_B=0
+    # shellcheck disable=SC2039
     local MINOR_B=0
+    # shellcheck disable=SC2039
     local PATCH_B=0
+    # shellcheck disable=SC2039
     local SPECIAL_B=0
 
     semverParseInto "$1" MAJOR_A MINOR_A PATCH_A SPECIAL_A
@@ -39,7 +47,7 @@ function semverCmp() {
 
     # major
     if [ $MAJOR_A -lt $MAJOR_B ]; then
-        return -1
+        return 2
     fi
 
     if [ $MAJOR_A -gt $MAJOR_B ]; then
@@ -48,7 +56,7 @@ function semverCmp() {
 
     # minor
     if [ $MINOR_A -lt $MINOR_B ]; then
-        return -1
+        return 2
     fi
 
     if [ $MINOR_A -gt $MINOR_B ]; then
@@ -57,7 +65,7 @@ function semverCmp() {
 
     # patch
     if [ $PATCH_A -lt $PATCH_B ]; then
-        return -1
+        return 2
     fi
 
     if [ $PATCH_A -gt $PATCH_B ]; then
@@ -65,19 +73,19 @@ function semverCmp() {
     fi
 
     # special
-    if [[ ( "$SPECIAL_A" == "" ) && ( "$SPECIAL_B" != "" ) ]]; then
-        return -1
-    fi
-
-    if [[ ( "$SPECIAL_A" != "" ) && ( "$SPECIAL_B" == "" ) ]]; then
+    if [ "$SPECIAL_A" = "" ] && [ "$SPECIAL_B" != "" ]; then
         return 1
     fi
 
-    if [[ "$SPECIAL_A" < "$SPECIAL_B" ]]; then
-        return -1
+    if [ "$SPECIAL_A" != "" ] && [ "$SPECIAL_B" = "" ]; then
+        return 2
     fi
 
-    if [[ "$SPECIAL_A" > "$SPECIAL_B" ]]; then
+    if [ "$(expr "$SPECIAL_A" \< "$SPECIAL_B")" -eq 1 ]; then
+        return 2
+    fi
+
+    if [ "$(expr "$SPECIAL_A" \> "$SPECIAL_B")" -eq 1 ]; then
         return 1
     fi
 
@@ -85,8 +93,9 @@ function semverCmp() {
     return 0
 }
 
-function semverEQ() {
-    semverCmp $1 $2
+semverEQ() {
+    semverCmp "$1" "$2"
+    # shellcheck disable=SC2039
     local RESULT=$?
 
     if [ $RESULT -ne 0 ]; then
@@ -97,12 +106,12 @@ function semverEQ() {
     return 0
 }
 
-function semverLT() {
-    semverCmp $1 $2
+semverLT() {
+    semverCmp "$1" "$2"
+    # shellcheck disable=SC2039
     local RESULT=$?
 
-    # XXX: compare to 255, as returning -1 becomes return value 255
-    if [ $RESULT -ne 255 ]; then
+    if [ $RESULT -ne 2 ]; then
         # not lesser than
         return 1
     fi
@@ -110,8 +119,9 @@ function semverLT() {
     return 0
 }
 
-function semverGT() {
-    semverCmp $1 $2
+semverGT() {
+    semverCmp "$1" "$2"
+    # shellcheck disable=SC2039
     local RESULT=$?
 
     if [ $RESULT -ne 1 ]; then
@@ -122,8 +132,9 @@ function semverGT() {
     return 0
 }
 
-function semverLE() {
-    semverGT $1 $2
+semverLE() {
+    semverGT "$1" "$2"
+    # shellcheck disable=SC2039
     local RESULT=$?
 
     if [ $RESULT -ne 1 ]; then
@@ -134,8 +145,9 @@ function semverLE() {
     return 0
 }
 
-function semverGE() {
-    semverLT $1 $2
+semverGE() {
+    semverLT "$1" "$2"
+    # shellcheck disable=SC2039
     local RESULT=$?
 
     if [ $RESULT -ne 1 ]; then
@@ -146,66 +158,82 @@ function semverGE() {
     return 0
 }
 
-function semverBumpMajor() {
+semverBumpMajor() {
+    # shellcheck disable=SC2039
     local MAJOR=0
+    # shellcheck disable=SC2039
     local MINOR=0
+    # shellcheck disable=SC2039
     local PATCH=0
+    # shellcheck disable=SC2039
     local SPECIAL=""
 
-    semverParseInto $1 MAJOR MINOR PATCH SPECIAL
-    MAJOR=$(($MAJOR + 1))
+    semverParseInto "$1" MAJOR MINOR PATCH SPECIAL
+    MAJOR=$((MAJOR + 1))
     MINOR=0
     PATCH=0
     SPECIAL=""
 
-    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL $2
+    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL "$2"
 }
 
-function semverBumpMinor() {
+semverBumpMinor() {
+    # shellcheck disable=SC2039
     local MAJOR=0
+    # shellcheck disable=SC2039
     local MINOR=0
+    # shellcheck disable=SC2039
     local PATCH=0
+    # shellcheck disable=SC2039
     local SPECIAL=""
 
-    semverParseInto $1 MAJOR MINOR PATCH SPECIAL
-    MINOR=$(($MINOR + 1))
+    semverParseInto "$1" MAJOR MINOR PATCH SPECIAL
+    MINOR=$((MINOR + 1))
     PATCH=0
     SPECIAL=""
 
-    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL $2
+    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL "$2"
 }
 
-function semverBumpPatch() {
+semverBumpPatch() {
+    # shellcheck disable=SC2039
     local MAJOR=0
+    # shellcheck disable=SC2039
     local MINOR=0
+    # shellcheck disable=SC2039
     local PATCH=0
+    # shellcheck disable=SC2039
     local SPECIAL=""
 
-    semverParseInto $1 MAJOR MINOR PATCH SPECIAL
-    PATCH=$(($PATCH + 1))
+    semverParseInto "$1" MAJOR MINOR PATCH SPECIAL
+    PATCH=$((PATCH + 1))
     SPECIAL=""
 
-    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL $2
+    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL "$2"
 }
 
-function semverStripSpecial() {
+semverStripSpecial() {
+    # shellcheck disable=SC2039
     local MAJOR=0
+    # shellcheck disable=SC2039
     local MINOR=0
+    # shellcheck disable=SC2039
     local PATCH=0
+    # shellcheck disable=SC2039
     local SPECIAL=""
 
-    semverParseInto $1 MAJOR MINOR PATCH SPECIAL
+    semverParseInto "$1" MAJOR MINOR PATCH SPECIAL
     SPECIAL=""
 
-    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL $2
+    semverConstruct $MAJOR $MINOR $PATCH $SPECIAL "$2"
 }
 
-if [ "___semver.sh" == "___`basename $0`" ]; then
-    if [ "$2" == "" ]; then
+if [ "___semver.sh" = "___$(basename "$0")" ]; then
+    if [ "$2" = "" ]; then
         echo "$0 <version> <command> [version]"
         echo "Commands: cmp, eq, lt, gt, bump_major, bump_minor, bump_patch, strip_special"
         echo ""
-        echo "cmp: compares left version against right version, return 0 if equal, 255 (-1) if left is lower than right, 1 if left is higher than right"
+        echo "cmp: compares left version against right version, return 0 if equal, 2 if left is lower than right, 1 if left is higher than right"
         echo "eq: compares left version against right version, returns 0 if both versions are equal"
         echo "lt: compares left version against right version, returns 0 if left version is less than right version"
         echo "gt: compares left version against right version, returns 0 if left version is greater than than right version"
@@ -215,72 +243,72 @@ if [ "___semver.sh" == "___`basename $0`" ]; then
         echo "bump_patch: bumps patch of version, removing special"
         echo ""
         echo "strip_special: strips special from version"
-        exit 255
+        exit 3
     fi
 
-    if [ "$2" == "cmp" ]; then
-        semverCmp $1 $3
+    if [ "$2" = "cmp" ]; then
+        semverCmp "$1" "$3"
         RESULT=$?
         echo $RESULT
         exit $RESULT
     fi
 
-    if [ "$2" == "eq" ]; then
-        semverEQ $1 $3
+    if [ "$2" = "eq" ]; then
+        semverEQ "$1" "$3"
         RESULT=$?
         echo $RESULT
         exit $RESULT
     fi
 
-    if [ "$2" == "lt" ]; then
-        semverLT $1 $3
+    if [ "$2" = "lt" ]; then
+        semverLT "$1" "$3"
         RESULT=$?
         echo $RESULT
         exit $RESULT
     fi
 
-    if [ "$2" == "gt" ]; then
-        semverGT $1 $3
+    if [ "$2" = "gt" ]; then
+        semverGT "$1" "$3"
         RESULT=$?
         echo $RESULT
         exit $RESULT
     fi
 
-    if [ "$2" == "le" ]; then
-        semverLE $1 $3
+    if [ "$2" = "le" ]; then
+        semverLE "$1" "$3"
         RESULT=$?
         echo $RESULT
         exit $RESULT
     fi
 
-    if [ "$2" == "ge" ]; then
-        semverGE $1 $3
+    if [ "$2" = "ge" ]; then
+        semverGE "$1" "$3"
         RESULT=$?
         echo $RESULT
         exit $RESULT
     fi
 
-    if [ "$2" == "bump_major" ]; then
-        semverBumpMajor $1 VERSION
-        echo ${VERSION}
+    if [ "$2" = "bump_major" ]; then
+        semverBumpMajor "$1" VERSION
+        echo "${VERSION}"
         exit 0
     fi
 
-    if [ "$2" == "bump_minor" ]; then
-        semverBumpMinor $1 VERSION
-        echo ${VERSION}
+    if [ "$2" = "bump_minor" ]; then
+        semverBumpMinor "$1" VERSION
+        echo "${VERSION}"
         exit 0
     fi
 
-    if [ "$2" == "bump_patch" ]; then
-        semverBumpPatch $1 VERSION
-        echo ${VERSION}
+    if [ "$2" = "bump_patch" ]; then
+        semverBumpPatch "$1" VERSION
+        echo "${VERSION}"
         exit 0
     fi
 
-    if [ "$2" == "strip_special" ]; then
-        semverStripSpecial $1 VERSION
-        echo ${VERSION}
+    if [ "$2" = "strip_special" ]; then
+        semverStripSpecial "$1" VERSION
+        echo "${VERSION}"
         exit 0
     fi
 fi

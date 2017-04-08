@@ -1,18 +1,19 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 . ./semver.sh
 
-function doTest() {
-    local TEST=$1
-    local EXPECTED=$2
-    local ACTUAL=$3
+status=0
 
-    echo -n "$TEST: "
+doTest() {
+    local TEST="$1"
+    local EXPECTED="$2"
+    local ACTUAL="$3"
 
-    if [[ "$EXPECTED" == "$ACTUAL" ]]; then
-        echo "passed"
+    if [ "$EXPECTED" = "$ACTUAL" ]; then
+        echo "$TEST: passed"
     else
-        echo "FAILED, expected '${EXPECTED}', actual: '${ACTUAL}'"
+        status=1
+        echo "$TEST: FAILED, expected '${EXPECTED}', actual: '${ACTUAL}'"
     fi
 }
 
@@ -58,7 +59,7 @@ semverCmp $A $A
 doTest "semverCmp $A $A" 0 $?
 
 semverCmp $A $B
-doTest "semverCmp $A $B" 255 $?
+doTest "semverCmp $A $B" 2 $?
 
 semverCmp $B $A
 doTest "semverCmp $B $A" 1 $?
@@ -281,3 +282,5 @@ doTest "semverStripSpecial $E" "1.3.2" $VERSION
 }
 
 semverTest
+
+exit $status
