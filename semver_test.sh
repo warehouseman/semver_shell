@@ -6,6 +6,13 @@ status=0;
 count=0
 total=0;
 
+False=1;
+True=0;
+
+Equal=0;
+Greater=1;
+Lesser=2;
+
 red='\033[0;31m'
 green='\033[0;32m'
 nc='\033[0m' # No Color
@@ -37,6 +44,8 @@ local H=1.2.3-a
 local I=R2
 local J=R2.0
 local K=R2.0.0
+local L=0.2.79
+local M=0.2.79-1-gb78dc84
 
 local MAJOR=0
 local MINOR=0
@@ -59,211 +68,287 @@ semverParseInto $H MAJOR MINOR PATCH SPECIAL
 doTest "semverParseInto $H -> M m p s" "M:1 m:2 p:3 s:a" "M:$MAJOR m:$MINOR p:$PATCH s:$SPECIAL"
 
 semverLE $A $A
-doTest "semverLE $A $A" 0 $?
+doTest "semverLE $A $A => True " ${True} $?
 
 semverGE $A $A
-doTest "semverGE $A $A" 0 $?
+doTest "semverGE $A $A => True " ${True} $?
 
 
 echo "Comparisons"
 semverCmp $A $A
-doTest "semverCmp $A $A" 0 $?
+doTest "semverCmp $A $A => Equal " ${Equal} $?
 
 semverCmp $A $B
-doTest "semverCmp $A $B" 2 $?
+doTest "semverCmp $A $B => Lesser " ${Lesser} $?
 
 semverCmp $B $A
-doTest "semverCmp $B $A" 1 $?
+doTest "semverCmp $B $A => Greater " ${Greater} $?
 
 semverCmp $I $K
-doTest "semverCmp $I $K" 0 $?
+doTest "semverCmp $I $K => Equal " ${Equal} $?
 
 semverCmp $I $J
-doTest "semverCmp $I $J" 0 $?
+doTest "semverCmp $I $J => Equal " ${Equal} $?
 
 
 echo "Equality comparisons"
 semverEQ $A $A
-doTest "semverEQ $A $A" 0 $?
+doTest "semverEQ $A $A => True " ${True} $?
 
 semverLT $A $A
-doTest "semverLT $A $A" 1 $?
+doTest "semverLT $A $A => False " ${False} $?
 
 semverGT $A $A
-doTest "semverGT $A $A" 1 $?
+doTest "semverGT $A $A => False " ${False} $?
 
 
 echo "Major number comparisons"
 semverEQ $A $B
-doTest "semverEQ $A $B" 1 $?
+doTest "semverEQ $A $B => False " ${False} $?
 
 semverLT $A $B
-doTest "semverLT $A $B" 0 $?
+doTest "semverLT $A $B => True " ${True} $?
 
 semverGT $A $B
-doTest "semverGT $A $B" 1 $?
+doTest "semverGT $A $B => False " ${False} $?
 
 semverLE $A $B
-doTest "semverLE $A $B" 0 $?
+doTest "semverLE $A $B => True " ${True} $?
 
 semverGE $A $B
-doTest "semverGE $A $B" 1 $?
+doTest "semverGE $A $B => False " ${False} $?
 
 semverEQ $B $A
-doTest "semverEQ $B $A" 1 $?
+doTest "semverEQ $B $A => False " ${False} $?
 
 semverLT $B $A
-doTest "semverLT $B $A" 1 $?
+doTest "semverLT $B $A => False " ${False} $?
 
 semverGT $B $A
-doTest "semverGT $B $A" 0 $?
+doTest "semverGT $B $A => True " ${True} $?
 
 semverLE $B $A
-doTest "semverLE $B $A" 1 $?
+doTest "semverLE $B $A => False " ${False} $?
 
 semverGE $B $A
-doTest "semverGE $B $A" 0 $?
+doTest "semverGE $B $A => True " ${True} $?
 
 
 echo "Minor number comparisons"
 semverEQ $A $C
-doTest "semverEQ $A $C" 1 $?
+doTest "semverEQ $A $C => False " ${False} $?
 
 semverLT $A $C
-doTest "semverLT $A $C" 0 $?
+doTest "semverLT $A $C => True " ${True} $?
 
 semverGT $A $C
-doTest "semverGT $A $C" 1 $?
+doTest "semverGT $A $C => False " ${False} $?
 
 semverLE $A $C
-doTest "semverLE $A $C" 0 $?
+doTest "semverLE $A $C => True " ${True} $?
 
 semverGE $A $C
-doTest "semverGE $A $C" 1 $?
+doTest "semverGE $A $C => False " ${False} $?
 
 semverEQ $C $A
-doTest "semverEQ $C $A" 1 $?
+doTest "semverEQ $C $A => False " ${False} $?
 
 semverLT $C $A
-doTest "semverLT $C $A" 1 $?
+doTest "semverLT $C $A => False " ${False} $?
 
 semverGT $C $A
-doTest "semverGT $C $A" 0 $?
+doTest "semverGT $C $A => True " ${True} $?
 
 semverLE $C $A
-doTest "semverLE $C $A" 1 $?
+doTest "semverLE $C $A => False " ${False} $?
 
 semverGE $C $A
-doTest "semverGE $C $A" 0 $?
+doTest "semverGE $C $A => True " ${True} $?
 
 echo "Patch number comparisons"
 semverEQ $A $D
-doTest "semverEQ $A $D" 1 $?
+doTest "semverEQ $A $D => False " ${False} $?
 
 semverLT $A $D
-doTest "semverLT $A $D" 0 $?
+doTest "semverLT $A $D => True " ${True} $?
 
 semverGT $A $D
-doTest "semverGT $A $D" 1 $?
+doTest "semverGT $A $D => False " ${False} $?
 
 semverLE $A $D
-doTest "semverLE $A $D" 0 $?
+doTest "semverLE $A $D => True " ${True} $?
 
 semverGE $A $D
-doTest "semverGE $A $D" 1 $?
+doTest "semverGE $A $D => False " ${False} $?
 
 semverEQ $D $A
-doTest "semverEQ $D $A" 1 $?
+doTest "semverEQ $D $A => False " ${False} $?
 
 semverLT $D $A
-doTest "semverLT $D $A" 1 $?
+doTest "semverLT $D $A => False " ${False} $?
 
 semverGT $D $A
-doTest "semverGT $D $A" 0 $?
+doTest "semverGT $D $A => True " ${True} $?
 
 
 echo "Special section vs no special comparisons"
 semverEQ $A $E
-doTest "semverEQ $A $E" 1 $?
+doTest "semverEQ $A $E => False " ${False} $?
 
 semverLT $A $E
-doTest "semverLT $A $E" 1 $?
+doTest "semverLT $A $E => True " ${True} $?
 
 semverGT $A $E
-doTest "semverGT $A $E" 0 $?
+doTest "semverGT $A $E => False " ${False} $?
 
 semverLE $A $E
-doTest "semverLE $A $E" 1 $?
+doTest "semverLE $A $E => True " ${True} $?
 
 semverGE $A $E
-doTest "semverGE $A $E" 0 $?
+doTest "semverGE $A $E => False " ${False} $?
 
+echo "";
 semverEQ $E $A
-doTest "semverEQ $E $A" 1 $?
+doTest "semverEQ $E $A => False " ${False} $?
 
 semverLT $E $A
-doTest "semverLT $E $A" 0 $?
+doTest "semverLT $E $A => False " ${False} $?
 
 semverGT $E $A
-doTest "semverGT $E $A" 1 $?
+doTest "semverGT $E $A => True " ${True} $?
+
+semverLE $E $A
+doTest "semverLE $E $A => False " ${False} $?
+
+semverGE $E $A
+doTest "semverGE $E $A => True " ${True} $?
 
 
 echo "Special section vs special comparisons"
 semverEQ $E $F
-doTest "semverEQ $E $F" 1 $?
+doTest "semverEQ $E $F => False " ${False} $?
 
 semverLT $E $F
-doTest "semverLT $E $F" 0 $?
+doTest "semverLT $E $F => True " ${True} $?
 
 semverGT $E $F
-doTest "semverLT $E $F" 1 $?
+doTest "semverGT $E $F => False " ${False} $?
 
 semverLE $E $F
-doTest "semverLE $E $F" 0 $?
+doTest "semverLE $E $F => True " ${True} $?
 
 semverGE $E $F
-doTest "semverGE $E $F" 1 $?
+doTest "semverGE $E $F => False " ${False} $?
 
+echo "";
 semverEQ $F $E
-doTest "semverEQ $F $E" 1 $?
+doTest "semverEQ $F $E => False " ${False} $?
 
 semverLT $F $E
-doTest "semverLT $F $E" 1 $?
+doTest "semverLT $F $E => False " ${False} $?
 
 semverGT $F $E
-doTest "semverGT $F $E" 0 $?
+doTest "semverGT $F $E => True " ${True} $?
 
 semverLE $F $E
-doTest "semverLE $F $E" 1 $?
+doTest "semverLE $F $E => False " ${False} $?
 
 semverGE $F $E
-doTest "semverGE $F $E" 0 $?
+doTest "semverGE $F $E => True " ${True} $?
+
+echo "";
+echo "";
+semverEQ $A $F
+doTest "semverEQ $A $F => False " ${False} $?
+
+semverLT $A $F
+doTest "semverLT $A $F => True " ${True} $?
+
+semverGT $A $F
+doTest "semverGT $A $F => False " ${False} $?
+
+semverLE $A $F
+doTest "semverLE $A $F => True " ${True} $?
+
+semverGE $A $F
+doTest "semverGE $A $F => False " ${False} $?
+
+echo " ";
+semverEQ $F $A
+doTest "semverEQ $F $A => False " ${False} $?
+
+semverLT $F $A
+doTest "semverLT $F $A => False " ${False} $?
+
+semverGT $F $A
+doTest "semverGT $F $A => True " ${True} $?
+
+semverLE $F $A
+doTest "semverLE $F $A => False " ${False} $?
+
+semverGE $F $A
+doTest "semverGE $F $A => True " ${True} $?
+
+
+echo " ";
+echo " ";
+semverEQ $L $M
+doTest "semverEQ $L $M => False " ${False} $?
+
+semverLT $L $M
+doTest "semverLT $L $M => True " ${True} $?
+
+semverGT $L $M
+doTest "semverGT $L $M => False " ${False} $?
+
+semverLE $L $M
+doTest "semverLE $L $M => True " ${True} $?
+
+semverGE $L $M
+doTest "semverGE $L $M => False " ${False} $?
+
+echo "";
+semverEQ $M $L
+doTest "semverEQ $M $L => False " ${False} $?
+
+semverLT $M $L
+doTest "semverLT $M $L => False " ${False} $?
+
+semverGT $M $L
+doTest "semverGT $M $L => True " ${True} $?
+
+semverLE $M $L
+doTest "semverLE $M $L => False " ${False} $?
+
+semverGE $M $L
+doTest "semverGE $M $L => True " ${True} $?
+
 
 
 echo "Minor and patch number comparisons"
 semverEQ $A $G
-doTest "semverEQ $A $G" 1 $?
+doTest "semverEQ $A $G => False " ${False} $?
 
 semverLT $A $G
-doTest "semverLT $A $G" 1 $?
+doTest "semverLT $A $G => False " ${False} $?
 
 semverGT $A $G
-doTest "semverGT $A $G" 0 $?
+doTest "semverGT $A $G => True " ${True} $?
 
 semverLE $A $G
-doTest "semverLE $A $G" 1 $?
+doTest "semverLE $A $G => False " ${False} $?
 
 semverGE $A $G
-doTest "semverGE $A $G" 0 $?
+doTest "semverGE $A $G => True " ${True} $?
 
 semverEQ $G $A
-doTest "semverEQ $G $A" 1 $?
+doTest "semverEQ $G $A => False " ${False} $?
 
 semverLT $G $A
-doTest "semverLT $G $A" 0 $?
+doTest "semverLT $G $A => True " ${True} $?
 
 semverGT $G $A
-doTest "semverGT $G $A" 1 $?
+doTest "semverGT $G $A => False " ${False} $?
 
 
 echo "Bumping major"
@@ -292,14 +377,14 @@ doTest "semverBumpPatch $E" "1.3.3" $VERSION
 
 echo "Strip special"
 semverStripSpecial $A VERSION
-doTest "semverStripSpecial $A" "1.3.2" $VERSION
+doTest "semverStripSpecial $A" "${A#R}" $VERSION
 
 semverStripSpecial $E VERSION
-doTest "semverStripSpecial $E" "1.3.2" $VERSION
+doTest "semverStripSpecial $E" "${A#R}" $VERSION
 
 # Test that CI fails red
 # semverGT $A $A
-# doTest "semverGT $A $A" 0 $?
+# doTest "semverGT $A $A => True " ${True} $?
 
 }
 

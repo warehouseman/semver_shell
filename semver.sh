@@ -77,11 +77,13 @@ semverCmp() {
 
     # special
     if [ "$SPECIAL_A" = "" ] && [ "$SPECIAL_B" != "" ]; then
-        return 1
+#        echo "C 1  ||  \$SPECIAL_A = $SPECIAL_A, \$SPECIAL_B = $SPECIAL_B";
+        return 2 # missing is less than having
     fi
 
     if [ "$SPECIAL_A" != "" ] && [ "$SPECIAL_B" = "" ]; then
-        return 2
+ #       echo "C 2  ||  \$SPECIAL_A = $SPECIAL_A, \$SPECIAL_B = $SPECIAL_B";
+        return 1 # having is greater than missing
     fi
 
     if [ "$(expr "$SPECIAL_A" \< "$SPECIAL_B")" -eq 1 ]; then
