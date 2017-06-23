@@ -316,4 +316,22 @@ if [ "___semver.sh" = "___$(basename "$0")" ]; then
         echo "${VERSION}"
         exit 0
     fi
+
+    if [ "$2" = "parse" ]; then
+        VER=$1;
+        shift;
+        shift;
+
+        MA=0;
+        MI=0;
+        PA=0;
+        SP="";
+        semverParseInto $VER MA MI PA SP;
+        eval echo "export \$1=$MA\;";
+        eval echo "export \$2=$MI\;";
+        eval echo "export \$3=$PA\;";
+        eval echo "export \$4=$SP\;";
+        echo "";
+        exit 0
+    fi
 fi
