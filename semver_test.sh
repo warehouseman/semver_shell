@@ -46,6 +46,9 @@ local J=R2.0
 local K=R2.0.0
 local L=0.2.79
 local M=0.2.79-1-gb78dc84
+local N=
+local O="x,y,z"
+
 
 local MAJOR=0
 local MINOR=0
@@ -381,6 +384,13 @@ doTest "semverStripSpecial $A" "${A#R}" $VERSION
 
 semverStripSpecial $E VERSION
 doTest "semverStripSpecial $E" "${A#R}" $VERSION
+
+echo "Input Validations"
+semverGT $A $N
+doTest "semverGT $A $N => True " ${True} $?
+
+semverGT $A $O
+doTest "semverGT $A $O => True " ${True} $?
 
 # Test that CI fails red
 # semverGT $A $A
