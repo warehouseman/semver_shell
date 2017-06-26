@@ -25,6 +25,30 @@ semverParseInto() {
     eval "$5"="$(echo ${val} | sed -n -e "s#$RE#\6#p")"
 }
 
+semverValidate() {
+
+    # shellcheck disable=SC2039
+    local M=0
+    # shellcheck disable=SC2039
+    local m=0
+    # shellcheck disable=SC2039
+    local p=0
+    # shellcheck disable=SC2039
+    local s=0
+    local CHK=0
+
+    semverParseInto "$1" M m p s
+    local RE="^([0-9]*)$";
+    CHK=$(echo "${M}"| sed -r "s/${RE}/\1/g");
+    if ! [ ${CHK} -ge 0 -a ${CHK} -le 99999999 ] 2>/dev/null; then return 1; fi;
+    CHK=$(echo "${m}"| sed -r "s/${RE}/\1/g");
+    if ! [ ${CHK} -ge 0 -a ${CHK} -le 99999999 ] 2>/dev/null; then return 1; fi;
+    CHK=$(echo "${p}"| sed -r "s/${RE}/\1/g");
+    if ! [ ${CHK} -ge 0 -a ${CHK} -le 99999999 ] 2>/dev/null; then return 1; fi;
+
+    return 0;
+}
+
 semverConstruct() {
     if [ $# -eq 5 ]; then
         eval "$5=$1.$2.$3-$4"

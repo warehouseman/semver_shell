@@ -47,7 +47,10 @@ local K=R2.0.0
 local L=0.2.79
 local M=0.2.79-1-gb78dc84
 local N=
-local O="x,y,z"
+local O="x"
+local P="0.x"
+local Q="0.0.x"
+local R="0,0,0"
 
 
 local MAJOR=0
@@ -385,12 +388,43 @@ doTest "semverStripSpecial $A" "${A#R}" $VERSION
 semverStripSpecial $E VERSION
 doTest "semverStripSpecial $E" "${A#R}" $VERSION
 
+echo ""
 echo "Input Validations"
+echo " * 'major' version must be numeric or null."
+echo " * 'minor' & 'patch' become 0 if non-numeric."
+echo " * all non-numeric values get pushed into the 'special' extension."
 semverGT $A $N
 doTest "semverGT $A $N => True " ${True} $?
 
 semverGT $A $O
 doTest "semverGT $A $O => True " ${True} $?
+
+semverValidate $A
+doTest "semverValidate $A => True " ${True} $?
+
+semverValidate $F
+doTest "semverValidate $F => True " ${True} $?
+
+semverValidate $H
+doTest "semverValidate $H => True " ${True} $?
+
+semverValidate $M
+doTest "semverValidate $M => True " ${True} $?
+
+semverValidate $N
+doTest "semverValidate $N => True " ${True} $?
+
+semverValidate $O
+doTest "semverValidate $O => False " ${False} $?
+
+semverValidate $P
+doTest "semverValidate $P => True " ${True} $?
+
+semverValidate $Q
+doTest "semverValidate $Q => True " ${True} $?
+
+semverValidate $R
+doTest "semverValidate $R => False " ${False} $?
 
 # Test that CI fails red
 # semverGT $A $A
